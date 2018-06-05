@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Star Tips</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="feedback">Feedback</string>
+    <string name="share">Share</string>
+    <string name="submit_feedback">Submit</string>
+    <string name="rate_us_please">Rate us please</string>
+    <string name="about">About app</string>
+    <string name="_23_june">date</string>
+    <string name="post">post</string>
+    <string name="post_time">time</string>
+    <string name="admob_app_id">ca-app-pub-3940256099942544/5224354917</string>
+    <string name="jackpot_predictions">Star Tips</string>
+    <string name="your_email_address">Email Address</string>
+    <string name="interstitial">ca-app-pub-8367029433015882/3117368182</string>
+    <string name="interstitial_mine">ca-app-pub-1120846610061033/7712634371</string>
+    <string name="native_ad">ca-app-pub-1120846610061033/1825180589</string>
+    <string name="banner_ad">ca-app-pub-8367029433015882/2187429892</string>
+    <string name="app_descrip">Property of: ©Ham$ofts INC.</string>
+    <string name="About_App">Version 1.\nDeveloper:Bob Masinde.\nAll suggestions for improvements are welcomed.</string>
+    <string name="title_activity_index">Index</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
