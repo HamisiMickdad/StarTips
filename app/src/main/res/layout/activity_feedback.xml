@@ -9,7 +9,7 @@
         android:layout_marginTop="20dp"
         android:text="Feedback"
         android:textSize="20sp" />
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -21,7 +21,7 @@
             android:inputType="textEmailAddress"
             android:maxLines="1" />
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <EditText
         android:id="@+id/txtFeed"

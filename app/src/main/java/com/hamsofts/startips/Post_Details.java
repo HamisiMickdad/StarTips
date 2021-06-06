@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,7 +31,6 @@ public class Post_Details extends AppCompatActivity {
     DatabaseReference mRef;
     String postKey;
     TextView tvTitle, tvBody, tvTime;
-    private InterstitialAd mInterstitialAd;
     ImageView imgBody;
     ProgressDialog pd;
     String selection;
@@ -56,9 +54,6 @@ public class Post_Details extends AppCompatActivity {
         pd=new ProgressDialog(this);
         pd.setMessage("Loading...");
         pd.show();
-        mAdView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
 
         autoLinkTextView = (AutoLinkTextView)findViewById(R.id.autoLinkrate);
         autoLinkTextView.addAutoLinkMode(AutoLinkMode.MODE_CUSTOM);
@@ -83,16 +78,6 @@ public class Post_Details extends AppCompatActivity {
 
             }
         });
-       /*final NativeExpressAdView adView = (NativeExpressAdView) findViewById(R.id.adView);
-        adView.loadAd(new AdRequest.Builder().build());
-        adView.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                adView.setVisibility(View.VISIBLE);
-            }
-        });*/
-        mInterstitialAd = createNewIntAd();
-        loadIntAdd();
 
         if (postKey != null) {
 
@@ -134,97 +119,8 @@ public class Post_Details extends AppCompatActivity {
     }
 
 
-   /* private InterstitialAd createNewIntAd() {
-        InterstitialAd intAd = new InterstitialAd(PostDetailed.this);
-        // set the adUnitId (defined in values/strings.xml)
-        intAd.setAdUnitId(getString(R.string.interstitial));
-        intAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        showIntAdd();
-                    }
-                }, 6000);
-
-            }
-
-            @Override
-            public void onAdFailedToLoad(int errorCode) {
-
-
-            }
-
-            @Override
-            public void onAdClosed() {
-                // Proceed to the next level.
-            }
-        });
-        return intAd;
-    }
-
-    private void loadIntAdd() {
-        AdRequest adRequest = new AdRequest.Builder()
-                .build();
-        mInterstitialAd.loadAd(adRequest);
-    }
-
-    private void showIntAdd() {
-
-// Show the ad if it's ready. Otherwise toast and reload the ad.
-        if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
-        }
-    }
-*/
-   private InterstitialAd createNewIntAd() {
-       InterstitialAd intAd = new InterstitialAd(Post_Details.this);
-       // set the adUnitId (defined in values/strings.xml)
-       intAd.setAdUnitId(getString(R.string.interstitial));
-       intAd.setAdListener(new AdListener() {
-           @Override
-           public void onAdLoaded() {
-               Handler handler = new Handler();
-               handler.postDelayed(new Runnable() {
-                   public void run() {
-                       showIntAdd();
-                   }
-               }, 300);
-
-           }
-
-           @Override
-           public void onAdFailedToLoad(int errorCode) {
-
-
-           }
-
-           @Override
-           public void onAdClosed() {
-               // Proceed to the next level.
-           }
-       });
-       return intAd;
-   }
-
-    private void loadIntAdd() {
-        AdRequest adRequest = new AdRequest.Builder()
-                .build();
-        mInterstitialAd.loadAd(adRequest);
-    }
-
-    private void showIntAdd() {
-
-// Show the ad if it's ready. Otherwise toast and reload the ad.
-        if (mInterstitialAd != null && mInterstitialAd.isLoaded()) {
-            mInterstitialAd.show();
-        }
-    }
     @Override
     public void onBackPressed() {
-        /*mInterstitialAd = createNewIntAd();
-        loadIntAdd();*/
         finish();
     }
 

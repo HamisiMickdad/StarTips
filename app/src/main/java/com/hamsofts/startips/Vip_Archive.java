@@ -2,23 +2,25 @@ package com.hamsofts.startips;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.ads.NativeExpressAdView;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 
 public class Vip_Archive extends Fragment {
@@ -32,7 +34,6 @@ public class Vip_Archive extends Fragment {
     FirebaseRecyclerAdapter<Model, ItemViewHolder> firebaseRecyclerAdapter;
 
 
-    private InterstitialAd mInterstitialAd;
     TextView txtLoading;
 
     @Override
@@ -50,14 +51,9 @@ public class Vip_Archive extends Fragment {
         //mLayoutManager.setReverseLayout(true);
         //mLayoutManager.setStackFromEnd(true);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        final NativeExpressAdView adView = (NativeExpressAdView) view.findViewById(R.id.adView);
-        adView.loadAd(new AdRequest.Builder().build());
-        adView.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                adView.setVisibility(View.VISIBLE);
-            }
-        });
+
+        displayRecycler();
+
 
         return view;
     }
@@ -75,35 +71,66 @@ public class Vip_Archive extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Model, ItemViewHolder>(
-                Model.class,
-                R.layout.post_row,
-                ItemViewHolder.class,
-                mDatabaseReference
-        ) {
-            @Override
-            protected void populateViewHolder(ItemViewHolder viewHolder, final Model model, int position) {
-                final String item_key = getRef(position).getKey();
-                viewHolder.setTitle(model.getTitle());
-                viewHolder.setPrice(model.getBody());
-                viewHolder.setTime(model.getTime());
-                txtLoading.setVisibility(View.GONE);
-                viewHolder.mView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-
-                        Intent adDetails = new Intent(v.getContext(), Post_Details.class);
-                        adDetails.putExtra("postKey", item_key);
-                        adDetails.putExtra("selection","viparchive");
-                        startActivity(adDetails);
-                    }
-                });
-            }
-        };
-        mRecyclerView.setAdapter(firebaseRecyclerAdapter);
+       displayRecycler();
     }
 
+    public void displayRecycler() {
+
+        Query query = FirebaseDatabase.getInstance()
+                .getReference()
+                .child("jackpot")
+                .child("viparchive");
+
+        FirebaseRecyclerOptions<Model> options =
+                new FirebaseRecyclerOptions.Builder<Model>()
+                        .setQuery(query, Model.class)
+                        .build();
+
+        FirebaseRecyclerAdapter<Model, Daily_Tips.ItemViewHolder> adapter = new FirebaseRecyclerAdapter<Model, Daily_Tips.ItemViewHolder>(options) {
+
+            @Override
+            public Daily_Tips.ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                // Create a new instance of the ViewHolder, in this case we are using a custom
+                // layout called R.layout.message for each item
+                View view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.post_row, parent, false);
+
+                return new Daily_Tips.ItemViewHolder(view);
+            }
+
+            @Override
+            protected void onBindViewHolder(Daily_Tips.ItemViewHolder holder, int position, Model model) {
+                // Bind the Chat object to the ChatHolder
+                // ...
+                final String item_key = getRef(position).getKey();
+                holder.setTitle(model.getTitle());
+                holder.setBody(model.getBody());
+                holder.setTime(model.getTime());
+                loading.setVisibility(View.GONE);
+                //swipeRefreshLayout.setRefreshing(false);
+
+                holder.mView.setOnClickListener(v -> {
+
+
+                    Intent adDetails = new Intent(v.getContext(), Post_Details.class);
+                    adDetails.putExtra("selection","viparchive");
+                    adDetails.putExtra("postKey", item_key);
+                    startActivity(adDetails);
+                });
+            }
+            @Override
+            public void onError(DatabaseError e) {
+                // Called when there is an error getting data. You may want to update
+                // your UI to display an error message to the user.
+                // ...
+                Toast.makeText(getActivity(), ""+e, Toast.LENGTH_SHORT).show();
+                //swipeRefreshLayout.setRefreshing(false);
+
+            }
+        };
+        adapter.startListening();
+        mRecyclerView.setAdapter(adapter);
+    }
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
 
 
@@ -120,10 +147,10 @@ public class Vip_Archive extends Fragment {
             tvTitle.setText(title);
         }
 
-        public void setPrice(String price) {
+        public void setBody(String price) {
 
             TextView txtPrice = (TextView) mView.findViewById(R.id.post);
-            txtPrice.setText("Ksh. " + price);
+            txtPrice.setText(price);
 
         }
 
